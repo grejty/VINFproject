@@ -183,7 +183,8 @@ def parse_htmls():
             for key in headers:
                 headers[key] = None
 
-            pattern = r'<div class="infobox-cell-2 infobox-description">\n(.*?)</div>\n<div style="width:50%">\n(.*?)\n</div>'
+            pattern = r'<div class="infobox-cell-2 infobox-description">\n(.*?)</div>\n' \
+                      r'<div style="width:50%">\n(.*?)\n</div>'
 
             # Find all matches in the HTML content
             matches = re.findall(pattern, chunk, re.DOTALL)
@@ -225,7 +226,7 @@ def save_to_txt(url, content, task):
     # Check if files exist, create them if not
     for file in ['players.txt', 'regions.txt', 'bans.txt', 'scraped_urls.txt', 'scraped_htmls.txt']:
         if not os.path.exists(file):
-            with open(file, 'w', encoding='utf-8') as f:
+            with open(file, 'w', encoding='utf-8'):
                 pass  # This creates an empty file
 
     if task == "player_url":
