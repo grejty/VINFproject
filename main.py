@@ -119,9 +119,104 @@ def save_htmls(header):
         print(f'Successfully saved HTML content from {url}')
 
 
-def parse_html(file):
-    pass
-    # TODO
+def parse_htmls():
+    html_chunks = []
+
+    # First we need to read all htmls
+    with open('scraped_htmls.txt', 'r') as file:
+        lines = file.readlines()
+
+        html_chunk = ""
+        skip_next = False  # Flag to skip the next line
+
+        # Loop through the lines
+        for line in lines:
+            line = line.strip()
+
+            if skip_next:
+                # Skip the next line
+                skip_next = False
+                continue
+
+            if line.startswith('URL:'):
+                # If a new URL is encountered, it indicates the start of a new HTML content
+                if html_chunk:
+                    html_chunks.append(html_chunk)
+                html_chunk = ""
+                skip_next = True  # Skip the next line
+
+            else:
+                html_chunk += line + "\n"
+
+        # Add the last HTML chunk (if any)
+        if html_chunk:
+            html_chunks.append(html_chunk)
+
+    headers = {
+        'Name': None,
+        'Romanized Name': None,
+        'Nationality': None,
+        'Born': None,
+        'Status': None,
+        'Years Active (Player)': None,
+        'Years Active (Coach)': None,
+        'Years Active (Analyst)': None,
+        'Role': None,
+        'Team': None,
+        'Nicknames': None,
+        'Alternate IDs': None,
+        'Approx. Total Winnings': None,
+        'Games': None,
+    }
+
+    # Define the CSV file path
+    csv_file_path = 'parsed_data.csv'
+
+    # Create a CSV file and write headers as the first row
+    with open(csv_file_path, mode='w', newline='') as csv_file:
+        writer = csv.writer(csv_file, delimiter='\t')
+        writer.writerow(headers.keys())
+
+        # Iterate through the HTML chunks
+        for chunk in html_chunks:
+            # Clear the values in headers at the start of each loop
+            for key in headers:
+                headers[key] = None
+
+            pattern = r'<div class="infobox-cell-2 infobox-description">\n(.*?)</div>\n<div style="width:50%">\n(.*?)\n</div>'
+
+            # Find all matches in the HTML content
+            matches = re.findall(pattern, chunk, re.DOTALL)
+
+            for key, value in matches:
+                key = key.strip()
+                value = value.strip()
+
+                if "\xa0" in value:
+                    value = value.replace("\xa0", " ")
+                if value.startswith('<a href=') or '<span class="flag">' in value:
+                    value = re.findall(r'">([\s\S]*?)</a>', value)[-1].strip()
+                if '<b>' in value or '<br/>' in value:
+                    value = re.sub('<.*?>', ' ', value)
+                    value = ' '.join(value.split()).strip()
+                    value = re.sub(r'(\d{4}\s*–\s*\d{4})\s*', r'\1, ', value)
+                    value = re.sub('\n<br/>\n', ', ', value)
+                if "mw-redirect" in value:
+                    value = re.search(r'>(.*?)</a>', value, re.DOTALL).group(1).strip()
+                if "reference" in value:
+                    value = re.sub(r'<sup\b[^>]*>.*?</sup>', '', value, flags=re.DOTALL)
+                    value = re.findall(r'([^\n,]+)', value)
+                    value = ', '.join(value)
+
+                # Update the headers dictionary
+                if key[:-1] in headers:
+                    headers[key[:-1]] = value
+
+            # Write the values to the CSV file
+            writer.writerow(headers.values())
+            print(headers)
+
+    print(f'CSV file saved at {csv_file_path}')
 
 
 # Saving different content into text file
@@ -167,8 +262,9 @@ def save_to_txt(url, content, task):
 
 def main():
     global URL, HEADER
-    fetch_urls(URL, HEADER)
-    save_htmls(HEADER)
+    # fetch_urls(URL, HEADER)
+    # save_htmls(HEADER)
+    parse_htmls()
 
 
 main()
