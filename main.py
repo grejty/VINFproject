@@ -173,7 +173,7 @@ def parse_htmls():
     csv_file_path = 'parsed_data.csv'
 
     # Create a CSV file and write headers as the first row
-    with open(csv_file_path, mode='w', newline='') as csv_file:
+    with open(csv_file_path, mode='w', newline='', encoding='utf-8') as csv_file:
         writer = csv.writer(csv_file, delimiter='\t')
         writer.writerow(headers.keys())
 
