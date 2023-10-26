@@ -153,6 +153,8 @@ def parse_htmls():
             html_chunks.append(html_chunk)
 
     headers = {
+        'Nick': None,
+        'Overview': None,
         'Name': None,
         'Romanized Name': None,
         'Nationality': None,
@@ -183,13 +185,32 @@ def parse_htmls():
             for key in headers:
                 headers[key] = None
 
+            # Regex na najdene nicku hráča a následné uloženie
+            nick = re.search(r'https://liquipedia.net/counterstrike/(.*?)" property="og:url"/>', chunk).group(1)
+            if nick:
+                headers['Nick'] = nick
+                print(nick)
+                # TODO nejake jeble kodovanie, napr hraci - Marko%C5%9B(Markoś), &quot;gob b&quot;(Gob_b)...
+
+            # Regex na najdene "overview" textu hráča a následné uloženie
+            overview_info = re.findall(r"<meta content=\"([^\"].*[\s\S]*) name=\"description", chunk)
+            if overview_info:
+                overview_info = ''.join(overview_info).split("meta content=")[-1].strip("'").replace("\n", " ")
+                print(overview_info)
+                headers['Overview'] = overview_info
+                # TODO niektore overview zacina ' a niekto '" (treba fixnut)
+                # TODO Nikola &quot;NiKo&quot; Kovač
+
+            if nick.lower() in overview_info.lower():
+                pass
+            else:
+                print("NIE SOM TAM - " + nick)
+                print(overview_info)
+
             pattern = r'<div class="infobox-cell-2 infobox-description">\n(.*?)</div>\n' \
                       r'<div style="width:50%">\n(.*?)\n</div>'
-
-            # Find all matches in the HTML content
-            matches = re.findall(pattern, chunk, re.DOTALL)
-
-            for key, value in matches:
+            infobox_info = re.findall(pattern, chunk, re.DOTALL)
+            for key, value in infobox_info:
                 key = key.strip()
                 value = value.strip()
 
