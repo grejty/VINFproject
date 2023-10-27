@@ -1,6 +1,7 @@
 import requests
 import csv
 import re
+import html
 import os
 from time import sleep
 from bs4 import BeautifulSoup
@@ -186,26 +187,17 @@ def parse_htmls():
                 headers[key] = None
 
             # Regex na najdene nicku hráča a následné uloženie
-            nick = re.search(r'https://liquipedia.net/counterstrike/(.*?)" property="og:url"/>', chunk).group(1)
+            nick = re.search(r"<span dir=\"auto\">[\S\s](.*)[\S\s]</span>", chunk).group(1)
+
             if nick:
                 headers['Nick'] = nick
-                print(nick)
-                # TODO nejake jeble kodovanie, napr hraci - Marko%C5%9B(Markoś), &quot;gob b&quot;(Gob_b)...
 
             # Regex na najdene "overview" textu hráča a následné uloženie
-            overview_info = re.findall(r"<meta content=\"([^\"].*[\s\S]*) name=\"description", chunk)
+            overview_info = re.findall(r"<meta content=\"([^\"].*[\s\S]*)['\"] name=\"description\"", chunk)
             if overview_info:
-                overview_info = ''.join(overview_info).split("meta content=")[-1].strip("'").replace("\n", " ")
-                print(overview_info)
+                overview_info = ''.join(overview_info).split("meta content=")[-1].strip("'\"").replace("\n", " ")
+                overview_info = html.unescape(overview_info)
                 headers['Overview'] = overview_info
-                # TODO niektore overview zacina ' a niekto '" (treba fixnut)
-                # TODO Nikola &quot;NiKo&quot; Kovač
-
-            if nick.lower() in overview_info.lower():
-                pass
-            else:
-                print("NIE SOM TAM - " + nick)
-                print(overview_info)
 
             pattern = r'<div class="infobox-cell-2 infobox-description">\n(.*?)</div>\n' \
                       r'<div style="width:50%">\n(.*?)\n</div>'
