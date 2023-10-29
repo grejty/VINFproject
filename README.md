@@ -38,12 +38,22 @@ Main Program:
             - Fetch HTML content
    
             - Save HTML content and the URL to text files
+   
+     c. Parse HTMLs (function parse_htmls)
+   
+          - Read through HTMLs and save each chunk into a list
+   
+          - Iterate through chunks and extract information using regex patterns
+   
+          - Create a header and save parsed data into .csv file
 
 Utility Functions:
 
 - get_base_url: Extracts the base URL from a full URL
 
 - save_to_txt: Writes content to specific text files based on the task type ("player_url", "region_url", "html")
+
+- create_index: Generates a unique index list for each value based on its position in the parsed data .csv
 
 **====== Konzultácia č. 2 ======**
 
