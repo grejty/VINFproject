@@ -1,10 +1,13 @@
+from time import sleep
+from bs4 import BeautifulSoup
+from collections import defaultdict
 import requests
 import csv
 import re
 import html
 import os
-from time import sleep
-from bs4 import BeautifulSoup
+import pandas as pd
+
 
 URL = "https://liquipedia.net/counterstrike/Portal:Players"
 # Fake HTML header with User-Agent to mimic a real browser request
@@ -39,6 +42,47 @@ if URL[len(base_url):] not in robots:
 else:
     print("I am not allowed to visit this URL.")
     exit(0)
+
+
+# Saving different content into text file
+########################################################################################################################
+def save_to_txt(url, content, task):
+    # Check if files exist, create them if not
+    for file in ['players.txt', 'regions.txt', 'bans.txt', 'scraped_urls.txt', 'scraped_htmls.txt']:
+        if not os.path.exists(file):
+            with open(file, 'w', encoding='utf-8'):
+                pass  # This creates an empty file
+
+    if task == "player_url":
+        # Save URL to a TXT file
+        with open('players.txt', 'r', encoding='utf-8') as f_read:
+            if url not in f_read.read():
+                with open('players.txt', 'a', encoding='utf-8') as f_append:
+                    f_append.write(url + '\n')
+
+    elif task == "region_url":
+        # Save URL to a TXT file
+        with open('regions.txt', 'r', encoding='utf-8') as f_read:
+            if url not in f_read.read():
+                with open('regions.txt', 'a', encoding='utf-8') as f_append:
+                    f_append.write(url + '\n')
+
+    elif task == "ban_url":
+        # Save URL to a TXT file
+        with open('bans.txt', 'r', encoding='utf-8') as f_read:
+            if url not in f_read.read():
+                with open('bans.txt', 'a', encoding='utf-8') as f_append:
+                    f_append.write(url + '\n')
+
+    elif task == "html":
+        # Save HTML content to a TXT file
+        with open('scraped_urls.txt', 'r+', encoding='utf-8') as f_read:
+            if url not in f_read.read():
+                f_read.write(url + '\n')
+                with open('scraped_htmls.txt', 'a', encoding='utf-8') as f_append:
+                    f_append.write(f"URL: {url}\n")
+                    f_append.write("HTML Content:\n")
+                    f_append.write(content)
 
 
 # Fetch HTML code
@@ -233,52 +277,40 @@ def parse_htmls():
     print(f'CSV file saved at {csv_file_path}')
 
 
-# Saving different content into text file
-########################################################################################################################
-def save_to_txt(url, content, task):
-    # Check if files exist, create them if not
-    for file in ['players.txt', 'regions.txt', 'bans.txt', 'scraped_urls.txt', 'scraped_htmls.txt']:
-        if not os.path.exists(file):
-            with open(file, 'w', encoding='utf-8'):
-                pass  # This creates an empty file
+def create_index(columns):
+    df = pd.read_csv('parsed_data.csv', sep='\t')
 
-    if task == "player_url":
-        # Save URL to a TXT file
-        with open('players.txt', 'r', encoding='utf-8') as f_read:
-            if url not in f_read.read():
-                with open('players.txt', 'a', encoding='utf-8') as f_append:
-                    f_append.write(url + '\n')
+    index = defaultdict(list)
 
-    elif task == "region_url":
-        # Save URL to a TXT file
-        with open('regions.txt', 'r', encoding='utf-8') as f_read:
-            if url not in f_read.read():
-                with open('regions.txt', 'a', encoding='utf-8') as f_append:
-                    f_append.write(url + '\n')
+    for col in columns:
+        for j, value in enumerate(df[col]):
+            index[(col, value)].append(j)
 
-    elif task == "ban_url":
-        # Save URL to a TXT file
-        with open('bans.txt', 'r', encoding='utf-8') as f_read:
-            if url not in f_read.read():
-                with open('bans.txt', 'a', encoding='utf-8') as f_append:
-                    f_append.write(url + '\n')
+    return index
 
-    elif task == "html":
-        # Save HTML content to a TXT file
-        with open('scraped_urls.txt', 'r+', encoding='utf-8') as f_read:
-            if url not in f_read.read():
-                f_read.write(url + '\n')
-                with open('scraped_htmls.txt', 'a', encoding='utf-8') as f_append:
-                    f_append.write(f"URL: {url}\n")
-                    f_append.write("HTML Content:\n")
-                    f_append.write(content)
+
+def search(column, search_query):
+    # Load the CSV file with index
+    df = pd.read_csv('parsed_data.csv', sep='\t')
+
+    # Filter rows based on search queries
+    result = (df[df[column] == search_query])
+
+    return result
 
 
 def main():
     global URL, HEADER
     # fetch_urls(URL, HEADER)
     # save_htmls(HEADER)
-    parse_htmls()
+    # parse_htmls()
+    #result = search('parsed_data.csv', 'Nationality', 'United States',)
+    #print(result)
+
+    index_columns = ['Nationality', 'Born', 'Status', 'Role', 'Team', 'Approx. Total Winnings']
+    index = create_index(index_columns)
+
+    print(index)
 
 
 main()
