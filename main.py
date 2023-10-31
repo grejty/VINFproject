@@ -1,3 +1,4 @@
+import datetime
 from time import sleep
 from bs4 import BeautifulSoup
 from collections import defaultdict
@@ -6,8 +7,8 @@ import csv
 import re
 import html
 import os
+import datetime
 import pandas as pd
-
 
 URL = "https://liquipedia.net/counterstrike/Portal:Players"
 # Fake HTML header with User-Agent to mimic a real browser request
@@ -28,20 +29,21 @@ def get_base_url(input_url):
 
 # Check if given URL is allowed via robots.txt of the site
 ########################################################################################################################
-base_url = get_base_url(URL)
+def check_robots(url):
+    base_url = get_base_url(url)
 
-sleep(30)
-robots = requests.get(base_url + "/robots.txt", headers=HEADER).text
-robots = robots.split("User-agent: *\n")[1].split("User-agent:")[0].split("Disallow: ")[1:]
+    sleep(30)
+    robots = requests.get(base_url + "/robots.txt", headers=HEADER).text
+    robots = robots.split("User-agent: *\n")[1].split("User-agent:")[0].split("Disallow: ")[1:]
 
-for i, item in enumerate(robots):
-    robots[i] = item.strip()
+    for i, item in enumerate(robots):
+        robots[i] = item.strip()
 
-if URL[len(base_url):] not in robots:
-    pass
-else:
-    print("I am not allowed to visit this URL.")
-    exit(0)
+    if URL[len(base_url):] not in robots:
+        pass
+    else:
+        print("I am not allowed to visit this URL.")
+        exit(0)
 
 
 # Saving different content into text file
@@ -149,6 +151,8 @@ def fetch_urls(url, header):
                 save_to_txt(get_base_url(url) + player, "", "player_url")
 
 
+# Save HTML code
+########################################################################################################################
 def save_htmls(header):
     players_urls = open('players.txt', 'r', encoding='utf-8').readlines()
 
@@ -164,6 +168,8 @@ def save_htmls(header):
         print(f'Successfully saved HTML content from {url}')
 
 
+# Parse saved HTMLs
+########################################################################################################################
 def parse_htmls():
     html_chunks = []
 
@@ -277,40 +283,113 @@ def parse_htmls():
     print(f'CSV file saved at {csv_file_path}')
 
 
+# Create index for input columns
+########################################################################################################################
 def create_index(columns):
     df = pd.read_csv('parsed_data.csv', sep='\t')
 
     index = defaultdict(list)
 
-    for col in columns:
-        for j, value in enumerate(df[col]):
-            index[(col, value)].append(j)
+    for column in columns:
+        for j, value in enumerate(df[column]):
+            index[(column, value)].append(j)
 
     return index
 
 
-def search(column, search_query):
-    # Load the CSV file with index
-    df = pd.read_csv('parsed_data.csv', sep='\t')
+# Search function
+########################################################################################################################
+def search(index, search_query):
+    split_tmp = search_query.split("=")
+    column = split_tmp[0]
+    players = split_tmp[1].split(" AND ")
 
-    # Filter rows based on search queries
-    result = (df[df[column] == search_query])
+    # Define dictionary for storing values returned from query, which we can then compare
+    compare_dict = {
+        players[0]: [],
+        players[1]: [],
+    }
 
-    return result
+    for player in players:
+        player_index = index.get(('Nick', player))[0]
+        for key, value in index.items():
+            if isinstance(key[1], float) and player_index in value:
+                print(player, "nebol ako hráč aktívny.")
+                return
+
+            if key[0] == column and player_index in value:
+                compare_dict[player] = key[1]
+
+    print()
+    print(f"Query: {search_query}")
+    print()
+    print("Result:")
+    print(compare_dict)
+
+    years = list(compare_dict.values())
+    if could_have_played_together(years[0], years[1]):
+        print("\033[1mThe two players could have played together.\033[0m")
+    else:
+        print("\033[1mThe two players could not have played together.\033[0m")
+
+
+# Parses the years string and returns a list of tuples representing periods
+def parse_years(years_str):
+    periods = years_str.strip().strip(',').split(', ')
+    years_list = []
+
+    for period in periods:
+        start_end = period.split(' – ')
+        if len(start_end) == 1:
+            start = end = int(start_end[0])
+        else:
+            start, end = int(start_end[0]), int(start_end[1]) if start_end[1] != "Present" else float('inf')
+        years_list.append((start, end))
+
+    return years_list
+
+
+# Checks if there is an overlap between two periods
+def check_overlap(period1, period2):
+    start1, end1 = period1
+    start2, end2 = period2
+
+    if end1 is None or end2 is None:
+        return True
+
+    return not (end1 < start2 or start1 > end2)
+
+
+# Checks if two players could have played together during their careers
+def could_have_played_together(player1_periods, player2_periods):
+    player1_periods = parse_years(player1_periods)
+    player2_periods = parse_years(player2_periods)
+
+    for p1 in player1_periods:
+        for p2 in player2_periods:
+            if check_overlap(p1, p2):
+                return True
+    return False
 
 
 def main():
     global URL, HEADER
+    # check_robots (URL)
     # fetch_urls(URL, HEADER)
     # save_htmls(HEADER)
     # parse_htmls()
-    #result = search('parsed_data.csv', 'Nationality', 'United States',)
-    #print(result)
 
-    index_columns = ['Nationality', 'Born', 'Status', 'Role', 'Team', 'Approx. Total Winnings']
+    index_columns = ['Nick', 'Years Active (Player)']
     index = create_index(index_columns)
 
-    print(index)
+    # could have - sycrone AND dukiiii,  karl AND flex0r
+    # could not have - RobbaN AND dukiiii, Jee AND karl
+
+    # Test cases:
+    search(index, 'Years Active (Player)=sycrone AND dukiiii')
+    search(index, 'Years Active (Player)=karl AND flex0r')
+    search(index, 'Years Active (Player)=RobbaN AND dukiiii')
+    search(index, 'Years Active (Player)=Jee AND karl')
 
 
 main()
