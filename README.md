@@ -7,54 +7,59 @@ Zachytávanie údajov o profesionálnych hráčoch z hry Counter-Strike
 liquipedia.com 
 
 **====== Pseudokód: ======**
+1. Skontrolovanie robots.txt súboru a kontrola, či môzeme adresu crawlovať
 
-1. Set initial settings like base URL and headers
+2. Nastavenie time-outu na 30s (aby sme zabránili prípadnému IP banu)
 
-2. Sleep for 30 seconds (to respect rate limiting)
+3. Získanie URL adries na jednotlivé regióny hráčov za pomoci regexu
 
-3. Fetch robots.txt from the website to check for permission
+4. Crawlovanie cez URL regiónov a zachytávanie URL jednotlivých hráčov
+
+5. Sťahovanie HTML kódov stránok s profilmi hráčov
+
+6. Parsovanie a ukladanie dát do .csv súboru
+
+7. Vytvorenie indexera, ktorý pre každú hodnotu zapíše jej polohu v súbore
+
+8. Search funkcia, ktorá pomocou indexera odpovie na zadaný dopyt:
+
+      **Input Query:** ''Years Active (Player)=Jee AND karl''
 
 
-Main Program:
+      **Output:** {'Jee': '2021 – Present', 'karl': '2009 – 2016, 2016 – 2017, 2020'}
 
-4. If allowed by robots.txt:
-    
-    a. Fetch URLs (function fetch_urls)
-   
-        - Sleep 30 seconds between each request
-   
-        - Download HTML content of a URL
-   
-        - Extract URLs using regex pattern matching
-   
-        - Save region URLs and player URLs to text files
-   
-    b. Save HTMLs (function save_htmls)
-   
-        - Read player URLs from a file
-   
-        - For each player URL, sleep for 30 seconds, then
-   
-            - Fetch HTML content
-   
-            - Save HTML content and the URL to text files
-   
-     c. Parse HTMLs (function parse_htmls)
-   
-          - Read through HTMLs and save each chunk into a list
-   
-          - Iterate through chunks and extract information using regex patterns
-   
-          - Create a header and save parsed data into .csv file
+       The two players could not have played together.
 
-Utility Functions:
+**====== Útržok vyparsovaných dát: ======**
 
-- get_base_url: Extracts the base URL from a full URL
+**Header:** Dáta
 
-- save_to_txt: Writes content to specific text files based on the task type ("player_url", "region_url", "html")
+**Nick:** stikle-
 
-- create_index: Generates a unique index list for each value based on its position in the parsed data .csv
+**Overview:** Klesti "stikle-" Kola (born July 5, 1998) is an Albanian professional Counter-Strike: Global Offensive coach.
+
+**Name:** Klesti Kola
+
+**Nationality:** Albania
+
+**Born:** July  5, 1998 (age 25)
+
+**Status:** Active
+
+**Status Years Active (Player):** 
+
+**Status Years Active (Coach):** 2020 – Present
+
+**Role:** Coach	
+
+**Team:** Sangal Esports
+
+**Approx. Total Winnings:**	$1,006
 
 **====== Konzultácia č. 2 ======**
 
 19.10.2023 - Crawluje dáta, používa regex, parsuje údaje. Do budúcej konzultácie urobí indexáciu.
+
+**====== Konzultácia č. 3 ======**
+
+3.11.2023 - Funkčná indexácia a search funkcia. Do budúcej konzultácie doplní dáta s wikipédiou. 
