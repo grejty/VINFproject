@@ -1,4 +1,3 @@
-import datetime
 from time import sleep
 from bs4 import BeautifulSoup
 from collections import defaultdict
@@ -7,7 +6,6 @@ import csv
 import re
 import html
 import os
-import datetime
 import pandas as pd
 
 URL = "https://liquipedia.net/counterstrike/Portal:Players"
@@ -390,6 +388,7 @@ def main():
     search(index, 'Years Active (Player)=karl AND flex0r')
     search(index, 'Years Active (Player)=RobbaN AND dukiiii')
     search(index, 'Years Active (Player)=Jee AND karl')
+    # TODO pridat data z wiki o timoch, potom doplnit search query či mohli hrat v rovnakom time, alebo proti sebe
 
 
 main()
