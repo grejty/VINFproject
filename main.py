@@ -48,38 +48,31 @@ def check_robots(url):
 ########################################################################################################################
 def save_to_txt(url, content, task):
     # Check if files exist, create them if not
-    for file in ['players.txt', 'regions.txt', 'bans.txt', 'scraped_urls.txt', 'scraped_htmls.txt']:
+    for file in ['data/players.txt', 'data/regions.txt', 'data/scraped_urls.txt', 'data/scraped_htmls.txt']:
         if not os.path.exists(file):
             with open(file, 'w', encoding='utf-8'):
                 pass  # This creates an empty file
 
     if task == "player_url":
         # Save URL to a TXT file
-        with open('players.txt', 'r', encoding='utf-8') as f_read:
+        with open('data/players.txt', 'r', encoding='utf-8') as f_read:
             if url not in f_read.read():
-                with open('players.txt', 'a', encoding='utf-8') as f_append:
+                with open('data/players.txt', 'a', encoding='utf-8') as f_append:
                     f_append.write(url + '\n')
 
     elif task == "region_url":
         # Save URL to a TXT file
-        with open('regions.txt', 'r', encoding='utf-8') as f_read:
+        with open('data/regions.txt', 'r', encoding='utf-8') as f_read:
             if url not in f_read.read():
-                with open('regions.txt', 'a', encoding='utf-8') as f_append:
-                    f_append.write(url + '\n')
-
-    elif task == "ban_url":
-        # Save URL to a TXT file
-        with open('bans.txt', 'r', encoding='utf-8') as f_read:
-            if url not in f_read.read():
-                with open('bans.txt', 'a', encoding='utf-8') as f_append:
+                with open('data/regions.txt', 'a', encoding='utf-8') as f_append:
                     f_append.write(url + '\n')
 
     elif task == "html":
         # Save HTML content to a TXT file
-        with open('scraped_urls.txt', 'r+', encoding='utf-8') as f_read:
+        with open('data/scraped_urls.txt', 'r+', encoding='utf-8') as f_read:
             if url not in f_read.read():
                 f_read.write(url + '\n')
-                with open('scraped_htmls.txt', 'a', encoding='utf-8') as f_append:
+                with open('data/scraped_htmls.txt', 'a', encoding='utf-8') as f_append:
                     f_append.write(f"URL: {url}\n")
                     f_append.write("HTML Content:\n")
                     f_append.write(content)
@@ -172,7 +165,7 @@ def parse_htmls():
     html_chunks = []
 
     # First we need to read all htmls
-    with open('scraped_htmls.txt', 'r') as file:
+    with open('data/scraped_htmls.txt', 'r') as file:
         lines = file.readlines()
 
         html_chunk = ""
@@ -221,7 +214,7 @@ def parse_htmls():
     }
 
     # Define the CSV file path
-    csv_file_path = 'parsed_data.csv'
+    csv_file_path = 'data/parsed_data.csv'
 
     # Create a CSV file and write headers as the first row
     with open(csv_file_path, mode='w', newline='', encoding='utf-8') as csv_file:
@@ -284,7 +277,7 @@ def parse_htmls():
 # Create index for input columns
 ########################################################################################################################
 def create_index(columns):
-    df = pd.read_csv('parsed_data.csv', sep='\t')
+    df = pd.read_csv('data/parsed_data.csv', sep='\t')
 
     index = defaultdict(list)
 
