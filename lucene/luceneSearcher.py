@@ -48,7 +48,11 @@ def could_have_played_together(player1_periods, player2_periods):
     return False
 
 
-def search(search_string1, search_string2):
+def search(search_string):
+    query_split = search_string.split(" ")
+    query1 = query_split[0]
+    query2 = query_split[1]
+
     counter = 0
     years = []
     indexDirectory = 'lucene/index'
@@ -67,8 +71,8 @@ def search(search_string1, search_string2):
     for score in results.scoreDocs:
         doc = searcher.doc(score.doc)
         print()
-        if doc.get("Nick") == search_string1 or doc.get("Nick") == search_string2:
 
+        if doc.get("Nick") == query1 or doc.get("Nick") == query2:
             years.append(doc.get("Years Active(Player)"))
 
             print(f'Nick: {doc.get("Nick")}')
@@ -81,7 +85,6 @@ def search(search_string1, search_string2):
         print('No records of given players.')
     else:
         print(f"Query: {search_string}")
-    print()
 
     print("Result:")
     if could_have_played_together(years[0], years[1]):
@@ -91,6 +94,12 @@ def search(search_string1, search_string2):
 
 
 if __name__ == "__main__":
-    search_string = input("Enter search string\n")
-    string_split = search_string.split(" ")
-    search(string_split[0], string_split[1])
+    input_query = input("Enter search string: \033[1m(t for test cases)\033[0m\n")
+
+    if input_query == "t":
+        search('sycrone dukiiii')
+        search('karl flex0r')
+        search('RobbaN dukiiii')
+        search('Jee karl')
+    else:
+        search(input_query)
