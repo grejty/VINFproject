@@ -63,3 +63,7 @@ liquipedia.com
 **====== Konzultácia č. 3 ======**
 
 3.11.2023 - Funkčná indexácia a search funkcia. Do budúcej konzultácie doplní dáta s wikipédiou. 
+
+**====== Konzultácia č. 4 - Prezentácia ======**
+
+16.11.2023 - Prezentácia OK. Do budúcej konzultácie paralelné spracovanie údajov.
