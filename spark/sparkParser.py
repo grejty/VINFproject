@@ -16,7 +16,7 @@ nicks_list = df_parsed_data.select("Nick").rdd.flatMap(lambda x: x).collect()
 
 dump_df = spark.read.format('xml') \
     .option("rowTag", "page") \
-    .load("../wikidumps/articles11.xml-p5399367p6899366")
+    .load("../wikidumps/enwiki-latest-pages-articles11.xml-p6899367p7054859")
 
 dump_df.printSchema()
 
@@ -33,11 +33,12 @@ filtered_df = (
     .filter(f.col("title").isin(nicks_list))
     #.filter(f.col("revision.text._VALUE").contains("team_history"))
     .withColumn("team_history", f.regexp_extract("revision.text._VALUE", r'team_history\s*=\s*(.*?)(\n|$)', 1))
+    .withColumn("revision_text", f.col("revision.text._VALUE"))
 )
 
 
 # Select and show the desired columns
-result_df = filtered_df.select("title", "team_history")
+result_df = filtered_df.select("title", "team_history", "revision_text")
 result_df.show(truncate=False)
 
 #filtered_df.repartition(1).write.options(header="True", delimiter=",").mode("overwrite").csv("output") TODO
