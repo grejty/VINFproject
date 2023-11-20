@@ -55,10 +55,10 @@ def search(search_string):
 
     counter = 0
     years = []
-    indexDirectory = 'lucene/index'
+    index_directory = 'lucene/index'
 
     # create an IndexSearcher object
-    reader = DirectoryReader.open(NIOFSDirectory.open(Paths.get(indexDirectory)))
+    reader = DirectoryReader.open(NIOFSDirectory.open(Paths.get(index_directory)))
     searcher = IndexSearcher(reader)
 
     # columns, we are searching in
@@ -68,23 +68,24 @@ def search(search_string):
     results = searcher.search(query, 100)
 
     # for each record, output the information about the Person we have found based on conditions given
+
+    print()
+    print(f"Query: {search_string}")
+    print()
+
     for score in results.scoreDocs:
         doc = searcher.doc(score.doc)
-        print()
 
         if doc.get("Nick") == query1 or doc.get("Nick") == query2:
             years.append(doc.get("Years Active(Player)"))
 
-            print(f'Nick: {doc.get("Nick")}')
-            print(f'Years Active(Player): {doc.get("Years Active(Player)")}')
+            print(f"Nick: {doc.get('Nick')}, Years Active(Player): {doc.get('Years Active(Player)')}")
 
             counter = counter + 1
 
     print()
     if not counter:
         print('No records of given players.')
-    else:
-        print(f"Query: {search_string}")
 
     print("Result:")
     if could_have_played_together(years[0], years[1]):
