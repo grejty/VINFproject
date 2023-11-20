@@ -23,11 +23,36 @@ liquipedia.com
 
 8. Search funkcia, ktorá pomocou indexera odpovie na zadaný dopyt:
 
-      **Input Query:** ''Years Active (Player)=Jee AND karl''
+      **Input Query:**
+
+        sycrone dukiiii
 
 
-      **Output:** {'Jee': '2021 – Present', 'karl': '2009 – 2016, 2016 – 2017, 2020'}
+      **Output:**
 
+        Nick: dukiiii, Years Active(Player): 2013 – Present
+
+        Nick: sycrone, Years Active(Player): 2015 – 2021
+   
+      **Result:**
+   
+       The two players could have played together.
+
+   ------------------------------------------------------------
+
+      **Input Query:**
+
+        Jee karl
+
+
+      **Output:**
+
+        Nick: Jee, Years Active(Player): 2021 – Present
+
+        Nick: karl, Years Active(Player): 2009 – 2016, 2016 – 2017, 2020
+   
+      **Result:**
+   
        The two players could not have played together.
 
 **====== Útržok vyparsovaných dát: ======**
