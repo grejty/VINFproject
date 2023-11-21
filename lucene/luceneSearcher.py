@@ -67,12 +67,11 @@ def search(search_string):
     query = MultiFieldQueryParser.parse(MultiFieldQueryParser(search_columns, StandardAnalyzer()), search_string)
     results = searcher.search(query, 100)
 
-    # for each record, output the information about the Person we have found based on conditions given
-
     print()
     print(f"Query: {search_string}")
     print()
 
+    # for each record, output the information about the Person we have found based on conditions given
     for score in results.scoreDocs:
         doc = searcher.doc(score.doc)
 

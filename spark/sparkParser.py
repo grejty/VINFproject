@@ -23,24 +23,16 @@ dump_df = spark.read.format('xml') \
 
 dump_df.printSchema()
 
-# Show titles
-# dump_df.select("titles").show(n=20, truncate=False)
-
-#####################
-
-# Save the DataFrame locally
-# dump_df.repartition(1).write.options(header="True", delimiter=",").mode("overwrite").csv("output")
-
 filtered_df = (
     dump_df
-    .filter(f.col("title").isin(nicks_list))
-    # .filter(f.col("revision.text._VALUE").contains("team_history"))
-    .withColumn("team_history", f.regexp_extract("revision.text._VALUE", r'team_history\s*=\s*(.*?)(\n|$)', 1))
-    # .withColumn("revision_text", f.col("revision.text._VALUE"))
+    .filter(f.col("title").isin(nationalities_list))
+    .filter((f.col("revision.text._VALUE").contains("population_estimate")) |
+            (f.col("revision.text._VALUE").contains("population_census")))
+    .withColumn("population", f.regexp_extract("revision.text._VALUE", r'\|\spopulation_(?![^=]*_)\D*(\d+.*?)[&}<(\n]', 1))
 )
 
 # Select and show the desired columns
-result_df = filtered_df.select("title", "team_history")
+result_df = filtered_df.select("title", "population")
 result_df.show(n=result_df.count(), truncate=False)
 
 # filtered_df.repartition(1).write.options(header="True", delimiter=",").mode("overwrite").csv("output") TODO
