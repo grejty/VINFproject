@@ -48,6 +48,20 @@ def could_have_played_together(player1_periods, player2_periods):
     return False
 
 
+def convert_string_to_int(value):
+    if not value:
+        return None
+    elif ' million' in value:
+        # Remove " million" and convert to float, then multiply by 1 million
+        return int(float(value.replace(' million', '')) * 1e6)
+    elif ',' in value:
+        # Remove commas and convert to int
+        return int(value.replace(',', ''))
+    else:
+        # Convert to int directly
+        return int(value)
+
+
 def search(search_string):
     query_split = search_string.split(" ")
     query1 = query_split[0]
@@ -78,7 +92,14 @@ def search(search_string):
         if doc.get("Nick") == query1 or doc.get("Nick") == query2:
             years.append(doc.get("Years Active(Player)"))
 
-            print(f"Nick: {doc.get('Nick')}, Years Active(Player): {doc.get('Years Active(Player)')}")
+            print(f"{counter+1} Nick: {doc.get('Nick')}, Years Active(Player): {doc.get('Years Active(Player)')}")
+
+            population = convert_string_to_int(doc.get('Population'))
+            if not population:
+                pro_players_per_resident = "[Population data not found]"
+            else:
+                pro_players_per_resident = population / int(doc.get('Nationality_Count'))
+            print(f"Number of residents per professional player in {doc.get('Nationality')}: {pro_players_per_resident}")
 
             counter = counter + 1
 
@@ -94,6 +115,11 @@ def search(search_string):
 
 
 if __name__ == "__main__":
+    # Algeria, Afghanistan, Albania, Azerbaijan, Belgium, Brazil, Bulgaria, Belarus, Bosnia and Herzegovina,
+    # Colombia, China, Chile, Croatia, Ecuador, Finland, Germany, Hungary, Hong Kong, Iceland, Italy, India,
+    # Indonesia, Iran, Kazakhstan, Kosovo, Latvia, Lithuania, Lebanon, Malta, Mongolia, Morocco, Montenegro,
+    # Netherlands, Norway, Poland, Portugal, Pakistan, Philippines, Russia, Romania, Taiwan, Spain, Switzerland,
+    # Slovakia, South Korea, Slovenia, Sudan, Serbia, Tunisia, United Kingdom, Ukraine, Uruguay, Uzbekistan, Venezuela
     input_query = input("Enter search string: \033[1m(t for test cases)\033[0m\n")
 
     if input_query == "t":

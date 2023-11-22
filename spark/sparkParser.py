@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
+from pyspark.sql.window import Window
 
 # Create a SparkSession with the Spark XML package
 spark = SparkSession.builder \
@@ -15,6 +16,11 @@ nicks_list = df_parsed_data.select("Nick").rdd.flatMap(lambda x: x).collect()
 
 # Extract the 'Nationality' column values into a list
 nationalities_list = df_parsed_data.select("Nationality").distinct().rdd.flatMap(lambda x: x).collect()
+# Algeria, Afghanistan, Albania, Azerbaijan, Belgium, Brazil, Bulgaria, Belarus, Bosnia and Herzegovina,
+# Colombia, China, Chile, Croatia, Ecuador, Finland, Germany, Hungary, Hong Kong, Iceland, Italy, India,
+# Indonesia, Iran, Kazakhstan, Kosovo, Latvia, Lithuania, Lebanon, Malta, Mongolia, Morocco, Montenegro,
+# Netherlands, Norway, Poland, Portugal, Pakistan, Philippines, Russia, Romania, Taiwan, Spain, Switzerland,
+# Slovakia, South Korea, Slovenia, Sudan, Serbia, Tunisia, United Kingdom, Ukraine, Uruguay, Uzbekistan, Venezuela
 
 dump_df = spark.read.format('xml') \
     .option("rowTag", "page") \
@@ -42,7 +48,17 @@ result_df.show(n=result_df.count(), truncate=False)
 joined_df = df_parsed_data.join(result_df, df_parsed_data["Nationality"] == result_df["country"], "left_outer")
 
 # Add the "population" column to the original DataFrame
-df_parsed_data_enriched = joined_df.withColumn("Population", f.lit(result_df["population"])).drop("country")
+df_parsed_data_enriched = joined_df.withColumn("Population", f.coalesce(result_df["population"], f.lit(None))).drop("country")
+
+# Define a window specification over the entire DataFrame to count occurrences of each Nationality
+window_spec = Window.partitionBy("Nationality")
+
+# Calculate the count of occurrences of each Nationality
+nationality_count = f.count("Nationality").over(window_spec)
+
+# Add a new column "Nationality_Count" calculated as the count of occurrences of each Nationality
+df_parsed_data_enriched = df_parsed_data_enriched \
+    .withColumn("Nationality_Count", nationality_count)
 
 # Save the updated DataFrame with the new column back to a specific CSV file
 df_parsed_data_enriched.coalesce(1).write.csv("../spark/parsed_data_enriched", header=True, sep="\t", mode="overwrite", quote="")

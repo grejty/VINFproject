@@ -18,7 +18,7 @@ def createIndex():
     print("Creating index...")
 
     # open the CSV file for reading
-    with open('data/parsed_data.csv', 'r') as csvfile:
+    with open('spark/parsed_data_enriched/parsed_data_enriched.csv', 'r') as csvfile:
         # read the data from the CSV file
         data = csv.reader(csvfile, delimiter='\t')
         # iterate over each row in the CSV file
@@ -42,6 +42,8 @@ def createIndex():
             doc.add(Field('Alternate IDs', row[13], TextField.TYPE_STORED))
             doc.add(Field('Approx.Total Winnings', row[14], TextField.TYPE_STORED))
             doc.add(Field('Games', row[15], TextField.TYPE_STORED))
+            doc.add(Field('Population', row[16], TextField.TYPE_STORED))
+            doc.add(Field('Nationality_Count', row[17], TextField.TYPE_STORED))
 
             # add the Document to the index
             writer.addDocument(doc)
