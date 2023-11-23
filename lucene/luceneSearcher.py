@@ -92,20 +92,21 @@ def search(search_string):
         if doc.get("Nick") == query1 or doc.get("Nick") == query2:
             years.append(doc.get("Years Active(Player)"))
 
-            print(f"{counter+1} Nick: {doc.get('Nick')}, Years Active(Player): {doc.get('Years Active(Player)')}")
+            print(f"Nick: {doc.get('Nick')}, Years Active(Player): {doc.get('Years Active(Player)')}")
 
             population = convert_string_to_int(doc.get('Population'))
             if not population:
                 pro_players_per_resident = "[Population data not found]"
             else:
                 pro_players_per_resident = population / int(doc.get('Nationality_Count'))
+                pro_players_per_resident = '{:,.0f}'.format(pro_players_per_resident)
             print(f"Number of residents per professional player in {doc.get('Nationality')}: {pro_players_per_resident}")
 
             counter = counter + 1
 
     print()
-    if not counter:
-        print('No records of given players.')
+    if counter != 2:
+        print('No records for one or both players.')
 
     print("Result:")
     if could_have_played_together(years[0], years[1]):
@@ -120,12 +121,15 @@ if __name__ == "__main__":
     # Indonesia, Iran, Kazakhstan, Kosovo, Latvia, Lithuania, Lebanon, Malta, Mongolia, Morocco, Montenegro,
     # Netherlands, Norway, Poland, Portugal, Pakistan, Philippines, Russia, Romania, Taiwan, Spain, Switzerland,
     # Slovakia, South Korea, Slovenia, Sudan, Serbia, Tunisia, United Kingdom, Ukraine, Uruguay, Uzbekistan, Venezuela
-    input_query = input("Enter search string: \033[1m(t for test cases)\033[0m\n")
+    while True:
+        input_query = input("\nEnter search string: \033[1m(t - test cases, q - exit)\033[0m\n")
 
-    if input_query == "t":
-        search('sycrone dukiiii')
-        search('karl flex0r')
-        search('RobbaN dukiiii')
-        search('Jee karl')
-    else:
-        search(input_query)
+        if input_query == "t":
+            search('Freelance peacemaker')
+            search('karl flex0r')
+            search('RobbaN dukiiii')
+            search('Jee tomsku')
+        elif input_query == "q":
+            exit(1)
+        else:
+            search(input_query)
