@@ -25,14 +25,19 @@ liquipedia.com
 
       **Input Query:**
 
-        sycrone dukiiii
-
+        Freelance peacemaker
 
       **Output:**
 
-        Nick: dukiiii, Years Active(Player): 2013 – Present
-
-        Nick: sycrone, Years Active(Player): 2015 – 2021
+          Query: Freelance peacemaker
+          
+          Nick: peacemaker, Years Active(Player): 2002 – 2015
+          
+          Number of residents per professional player in Portugal: 209,347
+          
+          Nick: Freelance, Years Active(Player): 2012 – 2019
+          
+          Number of residents per professional player in Switzerland: 989,145
    
       **Result:**
    
@@ -42,18 +47,23 @@ liquipedia.com
 
       **Input Query:**
 
-        Jee karl
-
+        karl flex0r
 
       **Output:**
 
-        Nick: Jee, Years Active(Player): 2021 – Present
-
-        Nick: karl, Years Active(Player): 2009 – 2016, 2016 – 2017, 2020
+          Query: karl flex0r
+          
+          Nick: karl , Years Active(Player): 2009 – 2016, 2016 – 2017, 2020
+          
+          Number of residents per professional player in China: 16,415,698
+          
+          Nick: flex0r, Years Active(Player): 2004 – 2019, 2021 – 2022
+          
+          Number of residents per professional player in France: [Population data not found]
    
       **Result:**
    
-       The two players could not have played together.
+       The two players could have played together.
 
 **====== Útržok vyparsovaných dát: ======**
 
