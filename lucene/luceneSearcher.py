@@ -89,8 +89,12 @@ def search(search_string):
     for score in results.scoreDocs:
         doc = searcher.doc(score.doc)
 
-        if doc.get("Nick") == query1 or doc.get("Nick") == query2:
-            years.append(doc.get("Years Active(Player)"))
+        if doc.get("Nick") in query_split:
+            career = doc.get("Years Active(Player)")
+            if career:
+                years.append(doc.get("Years Active(Player)"))
+
+            query_split.remove(doc.get("Nick"))
 
             print(f"Nick: {doc.get('Nick')}, Years Active(Player): {doc.get('Years Active(Player)')}")
 
@@ -106,10 +110,13 @@ def search(search_string):
 
     print()
     if counter != 2:
-        print('No records for one or both players.')
+        print(f'No records for player(s): {", ".join(map(str, query_split))}')
+        return
 
     print("Result:")
-    if could_have_played_together(years[0], years[1]):
+    if len(years) != 2:
+        print("\033[1mYears Active(Player) data not found for one or both players.\033[0m")
+    elif could_have_played_together(years[0], years[1]):
         print("\033[1mThe two players could have played together.\033[0m")
     else:
         print("\033[1mThe two players could not have played together.\033[0m")
@@ -122,7 +129,7 @@ if __name__ == "__main__":
     # Netherlands, Norway, Poland, Portugal, Pakistan, Philippines, Russia, Romania, Taiwan, Spain, Switzerland,
     # Slovakia, South Korea, Slovenia, Sudan, Serbia, Tunisia, United Kingdom, Ukraine, Uruguay, Uzbekistan, Venezuela
     while True:
-        input_query = input("\nEnter search string: \033[1m(t - test cases, q - exit)\033[0m\n")
+        input_query = input("\nEnter search query: \033[1m(t - test cases, q - exit)\033[0m\n")
 
         if input_query == "t":
             search('Freelance peacemaker')

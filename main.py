@@ -381,7 +381,6 @@ def main():
     search(index, 'Years Active (Player)=karl AND flex0r')
     search(index, 'Years Active (Player)=RobbaN AND dukiiii')
     search(index, 'Years Active (Player)=Jee AND karl')
-    # TODO pridat data z wiki o timoch, potom doplnit search query či mohli hrat v rovnakom time, alebo proti sebe
 
 
 main()
