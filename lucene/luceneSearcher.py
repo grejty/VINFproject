@@ -49,12 +49,12 @@ def could_have_played_together(player1_periods, player2_periods):
 
 
 def convert_string_to_int(value):
-    if not value:
-        return None
-    elif ' million' in value:
+    if value and ' million' in value:
         # Remove " million" and convert to float, then multiply by 1 million
         return int(float(value.replace(' million', '')) * 1e6)
-    elif ',' in value:
+    elif not value or any(char.isalpha() for char in value):
+        return None
+    elif value and ',' in value:
         # Remove commas and convert to int
         return int(value.replace(',', ''))
     else:
@@ -64,8 +64,6 @@ def convert_string_to_int(value):
 
 def search(search_string):
     query_split = search_string.split(" ")
-    query1 = query_split[0]
-    query2 = query_split[1]
 
     counter = 0
     years = []
@@ -104,22 +102,26 @@ def search(search_string):
             else:
                 pro_players_per_resident = population / int(doc.get('Nationality_Count'))
                 pro_players_per_resident = '{:,.0f}'.format(pro_players_per_resident)
-            print(f"Number of residents per professional player in {doc.get('Nationality')}: {pro_players_per_resident}")
+            print(f"Number of residents per professional "
+                  f"player in {doc.get('Nationality')}: {pro_players_per_resident}")
 
             counter = counter + 1
 
     print()
     if counter != 2:
         print(f'No records for player(s): {", ".join(map(str, query_split))}')
-        return
+        return False
 
     print("Result:")
     if len(years) != 2:
         print("\033[1mYears Active(Player) data not found for one or both players.\033[0m")
+        return False
     elif could_have_played_together(years[0], years[1]):
         print("\033[1mThe two players could have played together.\033[0m")
+        return True
     else:
         print("\033[1mThe two players could not have played together.\033[0m")
+        return False
 
 
 if __name__ == "__main__":
@@ -132,10 +134,33 @@ if __name__ == "__main__":
         input_query = input("\nEnter search query: \033[1m(t - test cases, q - exit)\033[0m\n")
 
         if input_query == "t":
-            search('Freelance peacemaker')
-            search('karl flex0r')
-            search('RobbaN dukiiii')
-            search('Jee tomsku')
+            output = search('Freelance peacemaker')
+            print("\033[1mExpected:\033[0m The two players could have played together.")
+            if output:
+                print("\033[1mCorrect.\033[0m")
+            else:
+                print("\033[1m[X] Incorrect.\033[0m")
+
+            output = search('karl flex0r')
+            print("\033[1mExpected:\033[0m The two players could have played together.")
+            if output:
+                print("\033[1mCorrect.\033[0m")
+            else:
+                print("\033[1m[X] Incorrect.\033[0m")
+
+            output = search('RobbaN dukiiii')
+            print("\033[1mExpected:\033[0m The two players could not have played together.")
+            if not output:
+                print("\033[1mCorrect.\033[0m")
+            else:
+                print("\033[1m[X] Incorrect.\033[0m")
+
+            output = search('Jee tomsku')
+            print("\033[1mExpected:\033[0m The two players could not have played together.")
+            if not output:
+                print("\033[1mCorrect.\033[0m")
+            else:
+                print("\033[1m[X] Incorrect.\033[0m")
         elif input_query == "q":
             exit(1)
         else:

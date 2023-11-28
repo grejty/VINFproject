@@ -29,13 +29,15 @@ nationalities_list = sorted(df_parsed_data.select("Nationality").distinct().rdd.
 
 print("\nAmount of nationalities in parsed data (not enriched):", len(nationalities_list))
 
+print("\nLoading XML file...")
 dump_df = spark.read.format('xml') \
     .option("rowTag", "page") \
-    .load("../wikidumps/enwiki-latest-pages-articles1.xml-p1p41242.bz2")
+    .load("../wikidumps/enwiki-latest-pages-articles.xml.bz2")
 
 print("\nSchema of the dump is as follows:")
 dump_df.printSchema()
 
+print("Filtering desired data...")
 filtered_df = (
     dump_df
     .filter(f.col("title").isin(nationalities_list))
@@ -50,11 +52,11 @@ filtered_df = (
 result_df = filtered_df.select("country", "population").orderBy("country")
 
 number_of_nationalities = result_df.count()
-print(f"Found {number_of_nationalities} nationalities in the dump. "
+print(f"\nFound {number_of_nationalities} nationalities in the dump. "
       f"(Success rate: {number_of_nationalities / len(nationalities_list) * 100:.2f}%)")
 
 print("Results of parsing the dump:")
-result_df.show(n=result_df.count(), truncate=False)
+result_df.show(n=number_of_nationalities, truncate=False)
 
 # Join DataFrames on the common columns "title" and "Nationality"
 joined_df = df_parsed_data.join(result_df, df_parsed_data["Nationality"] == result_df["country"], "left_outer")
@@ -86,7 +88,7 @@ populated_records_count = df_parsed_data_enriched.filter(f.col("Population").isN
 empty_records_count = df_parsed_data_enriched.filter(f.col("Population").isNull()).count()
 
 # Calculate the success rate
-total_records = df_parsed_data_enriched.count()
+total_records = populated_records_count + empty_records_count
 success_rate = (populated_records_count / total_records) * 100
 
 print(f"Players with Population data: {populated_records_count}")

@@ -1,0 +1,54 @@
+Enter search query: (t - test cases, q - exit)
+t
+
+Query: Freelance peacemaker
+
+Nick: peacemaker, Years Active(Player): 2002 – 2015
+Number of residents per professional player in Portugal: 209,347
+Nick: Freelance, Years Active(Player): 2012 – 2019
+Number of residents per professional player in Switzerland: 989,145
+
+Result:
+The two players could have played together.
+Expected: The two players could have played together.
+Correct.
+
+Query: karl flex0r
+
+Nick: karl, Years Active(Player): 2009 – 2016, 2016 – 2017, 2020
+Number of residents per professional player in China: 16,415,698
+Nick: flex0r, Years Active(Player): 2004 – 2019, 2021 – 2022,
+Number of residents per professional player in France: 1,000,626
+
+Result:
+The two players could have played together.
+Expected: The two players could have played together.
+Correct.
+
+Query: RobbaN dukiiii
+
+Nick: dukiiii, Years Active(Player): 2013 – Present
+Number of residents per professional player in Austria: 752,333
+Nick: RobbaN, Years Active(Player): 2003 – 2012
+Number of residents per professional player in Sweden: 93,282
+
+Result:
+The two players could not have played together.
+Expected: The two players could not have played together.
+Correct.
+
+Query: Jee tomsku
+
+Nick: Jee, Years Active(Player): 2021 – Present
+Number of residents per professional player in China: 16,415,698
+Nick: tomsku, Years Active(Player): 2010 – 2018
+Number of residents per professional player in Finland: 124,768
+
+Result:
+The two players could not have played together.
+Expected: The two players could not have played together.
+Correct.
+
+Enter search query: (t - test cases, q - exit)
+q
+#

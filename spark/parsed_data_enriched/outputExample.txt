@@ -1,0 +1,166 @@
+b5e90d4b6734:python -u /opt/project/spark/sparkParser.py
+:: loading settings :: url = jar:file:/usr/local/lib/python3.12/site-packages/pyspark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Ivy Default Cache set to: /root/.ivy2/cache
+The jars for the packages stored in: /root/.ivy2/jars
+com.databricks#spark-xml_2.12 added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-e6a7d088-fba4-4e14-928b-4946a8db44a0;1.0
+	confs: [default]
+	found com.databricks#spark-xml_2.12;0.14.0 in central
+	found commons-io#commons-io;2.8.0 in central
+	found org.glassfish.jaxb#txw2;2.3.4 in central
+	found org.apache.ws.xmlschema#xmlschema-core;2.2.5 in central
+downloading https://repo1.maven.org/maven2/com/databricks/spark-xml_2.12/0.14.0/spark-xml_2.12-0.14.0.jar ...
+	[SUCCESSFUL ] com.databricks#spark-xml_2.12;0.14.0!spark-xml_2.12.jar (31ms)
+downloading https://repo1.maven.org/maven2/commons-io/commons-io/2.8.0/commons-io-2.8.0.jar ...
+	[SUCCESSFUL ] commons-io#commons-io;2.8.0!commons-io.jar (31ms)
+downloading https://repo1.maven.org/maven2/org/glassfish/jaxb/txw2/2.3.4/txw2-2.3.4.jar ...
+	[SUCCESSFUL ] org.glassfish.jaxb#txw2;2.3.4!txw2.jar (24ms)
+downloading https://repo1.maven.org/maven2/org/apache/ws/xmlschema/xmlschema-core/2.2.5/xmlschema-core-2.2.5.jar ...
+	[SUCCESSFUL ] org.apache.ws.xmlschema#xmlschema-core;2.2.5!xmlschema-core.jar(bundle) (25ms)
+:: resolution report :: resolve 5601ms :: artifacts dl 116ms
+	:: modules in use:
+	com.databricks#spark-xml_2.12;0.14.0 from central in [default]
+	commons-io#commons-io;2.8.0 from central in [default]
+	org.apache.ws.xmlschema#xmlschema-core;2.2.5 from central in [default]
+	org.glassfish.jaxb#txw2;2.3.4 from central in [default]
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   4   |   4   |   4   |   0   ||   4   |   4   |
+	---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-e6a7d088-fba4-4e14-928b-4946a8db44a0
+	confs: [default]
+	4 artifacts copied, 0 already retrieved (676kB/7ms)
+23/11/28 10:18:13 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+
+Amount of nationalities in parsed data (not enriched): 82
+
+Loading XML file...
+
+Schema of the dump is as follows:
+root
+ |-- id: long (nullable = true)
+ |-- ns: long (nullable = true)
+ |-- redirect: struct (nullable = true)
+ |    |-- _VALUE: string (nullable = true)
+ |    |-- _title: string (nullable = true)
+ |-- revision: struct (nullable = true)
+ |    |-- comment: struct (nullable = true)
+ |    |    |-- _VALUE: string (nullable = true)
+ |    |    |-- _deleted: string (nullable = true)
+ |    |-- contributor: struct (nullable = true)
+ |    |    |-- _VALUE: string (nullable = true)
+ |    |    |-- _deleted: string (nullable = true)
+ |    |    |-- id: long (nullable = true)
+ |    |    |-- ip: string (nullable = true)
+ |    |    |-- username: string (nullable = true)
+ |    |-- format: string (nullable = true)
+ |    |-- id: long (nullable = true)
+ |    |-- minor: string (nullable = true)
+ |    |-- model: string (nullable = true)
+ |    |-- parentid: long (nullable = true)
+ |    |-- sha1: string (nullable = true)
+ |    |-- text: struct (nullable = true)
+ |    |    |-- _VALUE: string (nullable = true)
+ |    |    |-- _bytes: long (nullable = true)
+ |    |    |-- _xml:space: string (nullable = true)
+ |    |-- timestamp: timestamp (nullable = true)
+ |-- title: string (nullable = true)
+
+
+Filtering desired data...
+Found 80 nationalities in the dump. (Success rate: 97.56%)
+Results of parsing the dump:
++----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|country               |population                                                                                                                                                                                                                                        |
++----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|Afghanistan           |38,346,720                                                                                                                                                                                                                                        |
+|Albania               |2,793,592                                                                                                                                                                                                                                         |
+|Algeria               |45,400,000                                                                                                                                                                                                                                        |
+|Argentina             |46,621,847                                                                                                                                                                                                                                        |
+|Australia             |40.nsf/94713ad445ff1425ca25682000192af2/1647509ef7e25faaca2568a900154b63?OpenDocument |title=Population clock|work=[[Australian Bureau of Statistics]] website|date=31 August 2022|publisher=Commonwealth of Australia |access-date=31 August 2022|
+|Austria               |9,027,999                                                                                                                                                                                                                                         |
+|Azerbaijan            |10,353,296                                                                                                                                                                                                                                        |
+|Belarus               |9,255,524                                                                                                                                                                                                                                         |
+|Belgium               |11,697,557                                                                                                                                                                                                                                        |
+|Bosnia and Herzegovina|3,475,000                                                                                                                                                                                                                                         |
+|Brazil                |203,062,512                                                                                                                                                                                                                                       |
+|Bulgaria              |6,447,710                                                                                                                                                                                                                                         |
+|Cambodia              |16,713,015                                                                                                                                                                                                                                        |
+|Canada                |40,097,761                                                                                                                                                                                                                                        |
+|Chile                 |18,549,457                                                                                                                                                                                                                                        |
+|China                 |1,411,750,000                                                                                                                                                                                                                                     |
+|Colombia              |49,336,454                                                                                                                                                                                                                                        |
+|Croatia               |3,855,641                                                                                                                                                                                                                                         |
+|Denmark               |5,935,619                                                                                                                                                                                                                                         |
+|Ecuador               |17,483,326                                                                                                                                                                                                                                        |
+|Estonia               |1,365,884                                                                                                                                                                                                                                         |
+|Finland               |5,614,571                                                                                                                                                                                                                                         |
+|France                |68,042,591                                                                                                                                                                                                                                        |
+|Germany               |84,482,267                                                                                                                                                                                                                                        |
+|Guatemala             |17,980,803                                                                                                                                                                                                                                        |
+|Hong Kong             |7,498,100                                                                                                                                                                                                                                         |
+|Hungary               |9,678,000                                                                                                                                                                                                                                         |
+|Iceland               |376,248                                                                                                                                                                                                                                           |
+|India                 |1,428,627,663                                                                                                                                                                                                                                     |
+|Indonesia             |279,118,866                                                                                                                                                                                                                                       |
+|Iran                  |87,590,873                                                                                                                                                                                                                                        |
+|Iraq                  |43,500,000                                                                                                                                                                                                                                        |
+|Israel                |2022/Population-of-Israel-on-the-Eve-of-2023.aspx |title=Home page |publisher=Israel Central Bureau of Statistics |access-date=29 December 2022                                                                                                   |
+|Italy                 |58,853,482                                                                                                                                                                                                                                        |
+|Jordan                |11,484,805                                                                                                                                                                                                                                        |
+|Kazakhstan            |20,000,000                                                                                                                                                                                                                                        |
+|Kosovo                |1,761,985                                                                                                                                                                                                                                         |
+|Kyrgyzstan            |7,037,590                                                                                                                                                                                                                                         |
+|Latvia                |1,842,226                                                                                                                                                                                                                                         |
+|Lebanon               |5,296,814                                                                                                                                                                                                                                         |
+|Lithuania             |2,867,725                                                                                                                                                                                                                                         |
+|Malaysia              |33,200,000                                                                                                                                                                                                                                        |
+|Malta                 |519,562                                                                                                                                                                                                                                           |
+|Mexico                |129,875,529                                                                                                                                                                                                                                       |
+|Mongolia              |3,227,863                                                                                                                                                                                                                                         |
+|Montenegro            |602,445                                                                                                                                                                                                                                           |
+|Morocco               |37,984,655                                                                                                                                                                                                                                        |
+|Netherlands           |16,655,799                                                                                                                                                                                                                                        |
+|New Zealand           |15 May 2021                                                                                                                                                                                                                                       |
+|North Macedonia       |1,836,713                                                                                                                                                                                                                                         |
+|Norway                |5,488,984                                                                                                                                                                                                                                         |
+|Pakistan              |241,499,431                                                                                                                                                                                                                                       |
+|Peru                  |34,352,720                                                                                                                                                                                                                                        |
+|Philippines           |109,035,343                                                                                                                                                                                                                                       |
+|Poland                |38,036,118                                                                                                                                                                                                                                        |
+|Portugal              |10,467,366                                                                                                                                                                                                                                        |
+|Romania               |19,051,562                                                                                                                                                                                                                                        |
+|Russia                |147,182,123                                                                                                                                                                                                                                       |
+|Saudi Arabia          |32,175,224                                                                                                                                                                                                                                        |
+|Serbia                |6,647,003                                                                                                                                                                                                                                         |
+|Slovakia              |5,460,185                                                                                                                                                                                                                                         |
+|Slovenia              |2,120,937                                                                                                                                                                                                                                         |
+|South Africa          |62,027,503                                                                                                                                                                                                                                        |
+|South Korea           |51,966,948                                                                                                                                                                                                                                        |
+|Spain                 |48,345,223                                                                                                                                                                                                                                        |
+|Sudan                 |49,197,555                                                                                                                                                                                                                                        |
+|Sweden                |10,540,886                                                                                                                                                                                                                                        |
+|Switzerland           |8902308                                                                                                                                                                                                                                           |
+|Syria                 |22,933,531                                                                                                                                                                                                                                        |
+|Taiwan                |23,894,394                                                                                                                                                                                                                                        |
+|Tunisia               |11,708,370                                                                                                                                                                                                                                        |
+|Turkey                |85,279,553                                                                                                                                                                                                                                        |
+|Ukraine               |33.2 million                                                                                                                                                                                                                                      |
+|United Arab Emirates  |9,282,410                                                                                                                                                                                                                                         |
+|United Kingdom        |66,971,411                                                                                                                                                                                                                                        |
+|United States         |331,449,281{{efn|name="pop"                                                                                                                                                                                                                       |
+|Uruguay               |3,286,314                                                                                                                                                                                                                                         |
+|Uzbekistan            |36,024,000                                                                                                                                                                                                                                        |
+|Venezuela             |30,518,260                                                                                                                                                                                                                                        |
+|Vietnam               |100,000,000                                                                                                                                                                                                                                       |
++----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+Players with Population data: 1971
+Players without Population data: 39
+Success Rate: 98.06%
+
+Process finished with exit code 0
