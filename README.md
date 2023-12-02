@@ -205,3 +205,7 @@ q
 # Konzultácia č. 4 - Prezentácia
 
 16.11.2023 - Prezentácia OK. Do budúcej konzultácie paralelné spracovanie údajov.
+
+# Konzultácia č. 5 
+
+2.12.2023 - Konečné odovzdanie a prezentácia OK.
